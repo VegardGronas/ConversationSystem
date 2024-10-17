@@ -331,7 +331,7 @@ MonoBehaviour:
       conversationOnSelect: {fileID: 2021707684}
     - optionText: Okay ehhe
       conversationOnSelect: {fileID: 187525833}
---- !u!1 &296432495
+--- !u!1 &464408526
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -339,8 +339,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 296432496}
-  - component: {fileID: 296432497}
+  - component: {fileID: 464408528}
+  - component: {fileID: 464408527}
   m_Layer: 0
   m_Name: Option2
   m_TagString: Untagged
@@ -348,40 +348,40 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &296432496
+--- !u!114 &464408527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464408526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b915e534ef412045b44e15cb5f85a95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogues:
+  - text: Bye bye!
+    narratorAudioClip: {fileID: 0}
+    duration: 2
+    hasOptions: 0
+    options: []
+--- !u!4 &464408528
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 296432495}
+  m_GameObject: {fileID: 464408526}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 419598821}
+  m_Father: {fileID: 1058279860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &296432497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 296432495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b915e534ef412045b44e15cb5f85a95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogues:
-  - text: Great!
-    narratorAudioClip: {fileID: 0}
-    duration: 0
-    hasOptions: 0
-    options: []
---- !u!1 &419598820
+--- !u!1 &719439846
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -389,67 +389,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 419598821}
-  - component: {fileID: 419598822}
-  m_Layer: 0
-  m_Name: StartConversation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &419598821
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 419598820}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5970711, y: 0.41922182, z: -7.8288493}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 575085235}
-  - {fileID: 296432496}
-  - {fileID: 999564241}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &419598822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 419598820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b915e534ef412045b44e15cb5f85a95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogues:
-  - text: Hello there! Are you okay?
-    narratorAudioClip: {fileID: 0}
-    duration: 0
-    hasOptions: 0
-    options:
-    - optionText: Hmm, I do not feel to bad to be honest.
-      conversationOnSelect: {fileID: 575085236}
-    - optionText: I feel great!
-      conversationOnSelect: {fileID: 296432497}
-    - optionText: Terrible. In fact. Terrible
-      conversationOnSelect: {fileID: 999564242}
---- !u!1 &575085234
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 575085235}
-  - component: {fileID: 575085236}
+  - component: {fileID: 719439848}
+  - component: {fileID: 719439847}
   m_Layer: 0
   m_Name: Option1
   m_TagString: Untagged
@@ -457,40 +398,42 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &575085235
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 575085234}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 419598821}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &575085236
+--- !u!114 &719439847
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 575085234}
+  m_GameObject: {fileID: 719439846}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b915e534ef412045b44e15cb5f85a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dialogues:
-  - text: Thats fine to hear!
+  - text: Take care
     narratorAudioClip: {fileID: 0}
-    duration: 0
+    duration: 2
     hasOptions: 0
-    options: []
---- !u!1 &999564240
+    options:
+    - optionText: Only One
+      conversationOnSelect: {fileID: 0}
+--- !u!4 &719439848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719439846}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2021707683}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1058279858
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -498,48 +441,69 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 999564241}
-  - component: {fileID: 999564242}
+  - component: {fileID: 1058279860}
+  - component: {fileID: 1058279859}
   m_Layer: 0
-  m_Name: Option3
+  m_Name: TestConversation2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &999564241
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 999564240}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 419598821}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &999564242
+--- !u!114 &1058279859
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 999564240}
+  m_GameObject: {fileID: 1058279858}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b915e534ef412045b44e15cb5f85a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dialogues:
-  - text: Thats sad to hear..
+  - text: 'Hello there! '
     narratorAudioClip: {fileID: 0}
-    duration: 0
+    duration: 2
     hasOptions: 0
     options: []
+  - text: This is my way of talking  to you
+    narratorAudioClip: {fileID: 0}
+    duration: 2
+    hasOptions: 0
+    options: []
+  - text: My name is old man sam!
+    narratorAudioClip: {fileID: 0}
+    duration: 2
+    hasOptions: 0
+    options: []
+  - text: 'What Can I help you with? '
+    narratorAudioClip: {fileID: 0}
+    duration: 2
+    hasOptions: 1
+    options:
+    - optionText: Nothing
+      conversationOnSelect: {fileID: 1280119711}
+    - optionText: Okay ehhe
+      conversationOnSelect: {fileID: 464408527}
+--- !u!4 &1058279860
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058279858}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 929.1414, y: 452.43427, z: 6.5234947}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1280119712}
+  - {fileID: 464408528}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1274515596
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,6 +744,56 @@ MonoBehaviour:
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
   m_ObsoleteContactShadows: 0
+--- !u!1 &1280119710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1280119712}
+  - component: {fileID: 1280119711}
+  m_Layer: 0
+  m_Name: Option1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1280119711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280119710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b915e534ef412045b44e15cb5f85a95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogues:
+  - text: Okay bye!
+    narratorAudioClip: {fileID: 0}
+    duration: 2
+    hasOptions: 0
+    options: []
+--- !u!4 &1280119712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280119710}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1058279860}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2021707682
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,7 +823,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 719439848}
   m_Father: {fileID: 224300178}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2021707684
@@ -828,8 +843,10 @@ MonoBehaviour:
   - text: Okay bye!
     narratorAudioClip: {fileID: 0}
     duration: 2
-    hasOptions: 0
-    options: []
+    hasOptions: 1
+    options:
+    - optionText: Only One
+      conversationOnSelect: {fileID: 719439847}
 --- !u!1 &2058566662
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,7 +988,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 126703381}
   - {fileID: 1274515598}
-  - {fileID: 419598821}
   - {fileID: 2058566665}
   - {fileID: 7171285385698655926}
   - {fileID: 224300178}
+  - {fileID: 1058279860}

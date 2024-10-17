@@ -1,12 +1,14 @@
 using UnityEditor;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Narrator.New
 {
     public class EW_Conversation : EditorWindow
     {
         private Conversation[] conversations;  // Store root conversations
+        private bool[] foldouts;  // Store foldout states for each conversation
+
+        private Vector2 scrollPosition;
 
         [MenuItem("Tools/Conversation Finder")]
         public static void ShowWindow()
@@ -21,29 +23,37 @@ namespace Narrator.New
             {
                 // Find all root conversations in the scene
                 conversations = FindObjectsByType<Conversation>(FindObjectsSortMode.None);
+                foldouts = new bool[conversations.Length];  // Initialize foldout states
             }
 
             if (conversations != null)
             {
-                foreach (var conversation in conversations)
+                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
+                for (int i = 0; i < conversations.Length; i++)
                 {
-                    if (conversation.transform.parent == null)
+                    if (conversations[i].transform.parent == null)
                     {
-                        // Display the root conversation as a button
-                        if (GUILayout.Button(conversation.gameObject.name))
+                        // Display the root conversation as a foldout
+                        foldouts[i] = EditorGUILayout.Foldout(foldouts[i], conversations[i].gameObject.name, true);
+
+                        if (foldouts[i])
                         {
-                            // Select the root conversation in the scene
-                            Selection.activeObject = conversation.gameObject;
+                            if (GUILayout.Button("Select " + conversations[i].gameObject.name))
+                            {
+                                // Select the root conversation in the scene
+                                Selection.activeObject = conversations[i].gameObject;
+                            }
+
+                            // Access the dialogues and display them if the foldout is open
+                            SerializedObject serializedConversation = new SerializedObject(conversations[i]);
+                            SerializedProperty dialoguesProperty = serializedConversation.FindProperty("dialogues");
+                            DisplayDialogueOptions(dialoguesProperty, 1, conversations[i]);
                         }
-
-                        // Access the dialogues and recursively display options
-                        SerializedObject serializedConversation = new SerializedObject(conversation);
-                        SerializedProperty dialoguesProperty = serializedConversation.FindProperty("dialogues");
-
-                        // Display the dialogues and options in the context of the root conversation
-                        DisplayDialogueOptions(dialoguesProperty, 1, conversation);
                     }
                 }
+
+                EditorGUILayout.EndScrollView();
             }
             else
             {
@@ -51,7 +61,7 @@ namespace Narrator.New
             }
         }
 
-        // Recursively display dialogue options and their linked child conversations, but avoid duplication
+        // Recursively display dialogue options and their linked child conversations
         private void DisplayDialogueOptions(SerializedProperty dialoguesProperty, int indentLevel, Conversation rootConversation)
         {
             if (dialoguesProperty == null || dialoguesProperty.arraySize == 0) return;
@@ -97,18 +107,13 @@ namespace Narrator.New
                         }
                         GUILayout.EndHorizontal();
 
-                        // If the option has a linked conversation, recursively display its dialogues, but only as a child
+                        // If the option has a linked conversation, recursively display its dialogues
                         if (conversationOnSelectProperty.objectReferenceValue != null)
                         {
                             Conversation linkedConversation = (Conversation)conversationOnSelectProperty.objectReferenceValue;
 
-                            // Only display child conversations within the context of the parent (not as a new root)
-                            if (linkedConversation == rootConversation)
-                            {
-                                // Avoid recursive loops if the option points back to the same conversation
-                                Debug.LogWarning("Option links to the same root conversation, skipping.");
-                            }
-                            else
+                            // Only display child conversations within the context of the parent
+                            if (linkedConversation != rootConversation)
                             {
                                 SerializedObject linkedSerializedConversation = new SerializedObject(linkedConversation);
                                 SerializedProperty linkedDialoguesProperty = linkedSerializedConversation.FindProperty("dialogues");
