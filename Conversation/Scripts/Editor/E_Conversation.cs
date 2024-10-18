@@ -6,14 +6,6 @@ namespace Narrator.New
     [CustomEditor(typeof(Conversation))]
     public class E_Conversation : Editor
     {
-        SerializedProperty dialogues;
-
-        private void OnEnable()
-        {
-            // Find the property for the dialogues list
-            dialogues = serializedObject.FindProperty("dialogues");
-        }
-
         public override void OnInspectorGUI()
         {
             Conversation conversation = (Conversation)target;
@@ -23,25 +15,76 @@ namespace Narrator.New
                 // Add a button to the inspector
                 if (GUILayout.Button("Start Conversation"))
                 {
-                    // Call the method to start the conversation
                     conversation.StartConversation();
                 }
             }
 
-            for (int i = 0; i < dialogues.arraySize; i++)
+            // Ensure there is at least one dialogue
+            if (conversation.dialogues.Count <= 0)
             {
-                SerializedProperty dialogue = dialogues.GetArrayElementAtIndex(i);
+                conversation.AddDialogue();
+            }
 
-                EditorGUILayout.PropertyField(dialogue.FindPropertyRelative("text"), new GUIContent("Dialogue Text"));
-                EditorGUILayout.PropertyField(dialogue.FindPropertyRelative("narratorAudioClip"), new GUIContent("Narrator Audio"));
-                EditorGUILayout.PropertyField(dialogue.FindPropertyRelative("duration"), new GUIContent("Duration"));
-                SerializedProperty hasOptions = dialogue.FindPropertyRelative("hasOptions");
-                EditorGUILayout.PropertyField(hasOptions, new GUIContent("Has Options"));
+            for (int i = 0; i < conversation.dialogues.Count; i++)
+            {
+                DialogueData dialogue = conversation.dialogues[i];
+
+                // Start a horizontal group
+                EditorGUILayout.BeginHorizontal();
+
+                // Button to remove the conversation
+                if (GUILayout.Button("Remove Conversation"))
+                {
+                    conversation.RemoveConversation(i);
+                }
+
+                // Button to move the dialogue up
+                if (GUILayout.Button("Move Up"))
+                {
+                    conversation.MoveConversation(dialogue, -1); // Pass the dialogue to move
+                    Repaint();
+                }
+
+                // Button to move the dialogue down
+                if (GUILayout.Button("Move Down"))
+                {
+                    conversation.MoveConversation(dialogue, 1); // Pass the dialogue to move
+                    Repaint();
+                }
+
+                // End the horizontal group
+                EditorGUILayout.EndHorizontal();
+
+                // Use direct access to properties
+                dialogue.text = EditorGUILayout.TextField("Dialogue Text", dialogue.text);
+                dialogue.narratorAudioClip = (AudioClip)EditorGUILayout.ObjectField("Narrator Audio", dialogue.narratorAudioClip, typeof(AudioClip), false);
+                dialogue.duration = EditorGUILayout.FloatField("Duration", dialogue.duration);
+                dialogue.hasOptions = EditorGUILayout.Toggle("Has Options", dialogue.hasOptions);
 
                 // Conditionally show the options list if hasOptions is true
-                if (hasOptions.boolValue)
+                if (dialogue.hasOptions)
                 {
-                    EditorGUILayout.PropertyField(dialogue.FindPropertyRelative("options"), new GUIContent("Dialogue Options"), true);
+                    // Use a simple loop to display each option
+                    for (int j = 0; j < dialogue.options.Count; j++)
+                    {
+                        DialogueOption option = dialogue.options[j];
+                        option.optionText = EditorGUILayout.TextField($"Option {j + 1} Text", option.optionText);
+                        option.conversationOnSelect = (Conversation)EditorGUILayout.ObjectField($"Option {j + 1} Next Conversation", option.conversationOnSelect, typeof(Conversation), true);
+
+                        // Add buttons to remove or move options
+                        if (GUILayout.Button($"Remove Option {j + 1}"))
+                        {
+                            dialogue.options.RemoveAt(j);
+                            Repaint();
+                            break; // Exit the loop to avoid index issues
+                        }
+                    }
+
+                    // Button to add a new option
+                    if (GUILayout.Button("Add New Option"))
+                    {
+                        dialogue.options.Add(new DialogueOption());
+                    }
                 }
                 else
                 {
@@ -51,8 +94,13 @@ namespace Narrator.New
                 EditorGUILayout.Space();
             }
 
-            // Apply any changes made to the serialized object
-            serializedObject.ApplyModifiedProperties();
+            if (!Application.isPlaying)
+            {
+                if (GUILayout.Button("Add new conversation"))
+                {
+                    conversation.AddNewConversation();
+                }
+            }
         }
     }
 }
