@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO; // Add this for file handling
+using System.Linq; // Add this for LINQ
 using UnityEngine;
 
 namespace Narrator.New
@@ -7,20 +9,18 @@ namespace Narrator.New
     public class Conversation : MonoBehaviour
     {
         public List<DialogueData> dialogues = new();  // List of dialogues
-
         private int currentDialogueIndex = 0;  // Tracks the current dialogue
-
         float m_CurrentDisplayTime = 0;
-
         bool m_ConversationStarted;
-
         bool m_HasOptions;
+
+        DialogueData m_CurrentDialogue;
 
         private void Start()
         {
-            if(ConversationManager.Instance == null)
+            if (ConversationManager.Instance == null)
             {
-                Debug.LogError("Missing conversationmanager");
+                Debug.LogError("Missing conversation manager");
                 enabled = false;
             }
         }
@@ -37,6 +37,33 @@ namespace Narrator.New
         {
             DialogueData data = new();
             dialogues.Add(data);
+        }
+
+        // New method to load formatted text from a file
+        public void LoadFormattedText(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string fullText = File.ReadAllText(filePath);
+                string[] sentences = fullText.Split(new[] { '.', '?' }, StringSplitOptions.RemoveEmptyEntries);
+                dialogues.Clear(); // Clear existing dialogues
+
+                foreach (string sentence in sentences)
+                {
+                    // Trim whitespace and create new DialogueData for each sentence
+                    string trimmedSentence = sentence.Trim();
+                    if (!string.IsNullOrEmpty(trimmedSentence))
+                    {
+                        DialogueData dialogueData = new DialogueData { text = trimmedSentence };
+                        dialogues.Add(dialogueData);
+                    }
+                }
+                Debug.Log("Formatted text loaded successfully.");
+            }
+            else
+            {
+                Debug.LogError($"File not found: {filePath}");
+            }
         }
 
         public void StartConversation()
@@ -79,21 +106,21 @@ namespace Narrator.New
         {
             if (currentDialogueIndex < dialogues.Count)
             {
-                var currentDialogue = dialogues[currentDialogueIndex];
+                m_CurrentDialogue = dialogues[currentDialogueIndex];
 
-                m_CurrentDisplayTime = currentDialogue.duration;
+                m_CurrentDisplayTime = m_CurrentDialogue.duration;
 
-                m_HasOptions = currentDialogue.hasOptions;
+                m_HasOptions = m_CurrentDialogue.hasOptions;
 
-                ShowOptions(currentDialogue.options);
+                ShowOptions(m_CurrentDialogue.options);
 
-                if(currentDialogue.narratorAudioClip)
+                if (m_CurrentDialogue.narratorAudioClip)
                 {
-                    ConversationManager.Instance.AudioSource.clip = currentDialogue.narratorAudioClip;
+                    ConversationManager.Instance.AudioSource.clip = m_CurrentDialogue.narratorAudioClip;
                     ConversationManager.Instance.AudioSource.Play();
                 }
 
-                ConversationManager.Instance.StartConversation(currentDialogue);
+                ConversationManager.Instance.StartConversation(m_CurrentDialogue);
             }
             else
             {
@@ -101,11 +128,24 @@ namespace Narrator.New
             }
         }
 
+        private void ContinueConversation()
+        {
+            currentDialogueIndex++;
+
+            if (currentDialogueIndex < dialogues.Count)
+            {
+                StartConversation();  // Start the next dialogue
+            }
+            else
+            {
+                EndConversation();  // End the conversation if there are no more dialogues
+            }
+        }
+
         private void EndConversation()
         {
             Debug.Log("Conversation ended.");
             m_ConversationStarted = false;
-
             ConversationManager.Instance.EndConversation();
         }
 
@@ -119,22 +159,24 @@ namespace Narrator.New
 
         private void Update()
         {
-            if(!m_HasOptions && m_ConversationStarted)
+            if (!m_HasOptions && m_ConversationStarted)
             {
                 m_CurrentDisplayTime -= Time.deltaTime;
 
-                if(m_CurrentDisplayTime < 0 )
+                if (m_CurrentDisplayTime < 0)
                 {
                     m_ConversationStarted = false;
-                    currentDialogueIndex++;
-
-                    if (currentDialogueIndex < dialogues.Count)
+                    ContinueConversation(); // Call ContinueConversation instead of directly incrementing
+                }
+            }
+            else if(m_HasOptions && m_ConversationStarted)
+            {
+                foreach(DialogueOption option in m_CurrentDialogue.options)
+                {
+                    if(option.continueConversation)
                     {
-                        StartConversation();
-                    }
-                    else
-                    {
-                        EndConversation();   
+                        ContinueConversation();
+                        break;
                     }
                 }
             }
@@ -144,15 +186,38 @@ namespace Narrator.New
     [Serializable]
     public class DialogueData
     {
-        public string text;  // Dialogue text
+        public string text = "Write here:D";  // Dialogue text
 
         public AudioClip narratorAudioClip;
 
-        public float duration;
+        [Tooltip("Time in seconds to show the dialogue")]
+        public float duration = 5;
 
         public bool hasOptions;
 
         public List<DialogueOption> options;  // Multiple options for this dialogue
+
+        // Method to move an option up in the list
+        public void MoveOptionUp(DialogueOption optionToMove)
+        {
+            int currentIndex = options.IndexOf(optionToMove);
+            if (currentIndex <= 0 || currentIndex >= options.Count)
+                return;
+
+            options.RemoveAt(currentIndex);
+            options.Insert(currentIndex - 1, optionToMove);
+        }
+
+        // Method to move an option down in the list
+        public void MoveOptionDown(DialogueOption optionToMove)
+        {
+            int currentIndex = options.IndexOf(optionToMove);
+            if (currentIndex < 0 || currentIndex >= options.Count - 1)
+                return;
+
+            options.RemoveAt(currentIndex);
+            options.Insert(currentIndex + 1, optionToMove);
+        }
     }
 
     [Serializable]
@@ -161,9 +226,18 @@ namespace Narrator.New
         public string optionText;  // Text shown for this option
         public Conversation conversationOnSelect;  // Optional next conversation
 
+        public bool continueConversation = false;
+
         public void RunOption()
         {
-            conversationOnSelect.StartConversation();
+            if(conversationOnSelect != null)
+            {
+                conversationOnSelect.StartConversation();
+            }
+            else
+            {
+                continueConversation = true;
+            }
         }
     }
 }

@@ -48,8 +48,10 @@ namespace Narrator.New
             ClearOptions();
 
             m_DialogueLabel.text = dialogueData.text;
-        
-            if(dialogueData.options.Count > 0)
+
+            m_DialogueContainer.gameObject.SetActive(true);
+
+            if (dialogueData.options.Count > 0)
             {
                 foreach (DialogueOption option in dialogueData.options)
                 {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace Narrator.New
 
             if (Application.isPlaying)
             {
-                // Add a button to the inspector
+                // Add a button to start the conversation
                 if (GUILayout.Button("Start Conversation"))
                 {
                     conversation.StartConversation();
@@ -41,14 +42,14 @@ namespace Narrator.New
                 // Button to move the dialogue up
                 if (GUILayout.Button("Move Up"))
                 {
-                    conversation.MoveConversation(dialogue, -1); // Pass the dialogue to move
+                    conversation.MoveConversation(dialogue, -1);
                     Repaint();
                 }
 
                 // Button to move the dialogue down
                 if (GUILayout.Button("Move Down"))
                 {
-                    conversation.MoveConversation(dialogue, 1); // Pass the dialogue to move
+                    conversation.MoveConversation(dialogue, 1);
                     Repaint();
                 }
 
@@ -56,28 +57,54 @@ namespace Narrator.New
                 EditorGUILayout.EndHorizontal();
 
                 // Use direct access to properties
-                dialogue.text = EditorGUILayout.TextField("Dialogue Text", dialogue.text);
+                dialogue.text = EditorGUILayout.TextArea(dialogue.text, GUILayout.Height(60));
                 dialogue.narratorAudioClip = (AudioClip)EditorGUILayout.ObjectField("Narrator Audio", dialogue.narratorAudioClip, typeof(AudioClip), false);
                 dialogue.duration = EditorGUILayout.FloatField("Duration", dialogue.duration);
                 dialogue.hasOptions = EditorGUILayout.Toggle("Has Options", dialogue.hasOptions);
 
+                // Initialize options if null
+                if (dialogue.options == null)
+                {
+                    dialogue.options = new List<DialogueOption>();
+                }
+
                 // Conditionally show the options list if hasOptions is true
                 if (dialogue.hasOptions)
                 {
-                    // Use a simple loop to display each option
                     for (int j = 0; j < dialogue.options.Count; j++)
                     {
                         DialogueOption option = dialogue.options[j];
+
+                        // Ensure option is not null
+                        if (option == null)
+                        {
+                            option = new DialogueOption();
+                            dialogue.options[j] = option;
+                        }
+
                         option.optionText = EditorGUILayout.TextField($"Option {j + 1} Text", option.optionText);
                         option.conversationOnSelect = (Conversation)EditorGUILayout.ObjectField($"Option {j + 1} Next Conversation", option.conversationOnSelect, typeof(Conversation), true);
 
-                        // Add buttons to remove or move options
+                        EditorGUILayout.BeginHorizontal();
+
                         if (GUILayout.Button($"Remove Option {j + 1}"))
                         {
                             dialogue.options.RemoveAt(j);
                             Repaint();
                             break; // Exit the loop to avoid index issues
                         }
+
+                        if (GUILayout.Button("Move up"))
+                        {
+                            dialogue.MoveOptionUp(option);
+                        }
+
+                        if (GUILayout.Button("Move down"))
+                        {
+                            dialogue.MoveOptionDown(option);
+                        }
+
+                        EditorGUILayout.EndHorizontal();
                     }
 
                     // Button to add a new option
@@ -96,6 +123,16 @@ namespace Narrator.New
 
             if (!Application.isPlaying)
             {
+                if (GUILayout.Button("Load Formatted Text"))
+                {
+                    // Open a file selection dialog
+                    string path = EditorUtility.OpenFilePanel("Load Formatted Text", "", "txt");
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        conversation.LoadFormattedText(path);
+                    }
+                }
+
                 if (GUILayout.Button("Add new conversation"))
                 {
                     conversation.AddNewConversation();
